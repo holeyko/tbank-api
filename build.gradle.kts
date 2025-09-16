@@ -1,6 +1,4 @@
-import jdk.tools.jlink.resources.plugins
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import sun.jvmstat.monitor.MonitoredVmUtil.mainClass
 
 plugins {
     kotlin("jvm") version "2.0.21"
@@ -55,4 +53,8 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.named<JavaExec>("run") {
+    standardInput = System.`in`
 }

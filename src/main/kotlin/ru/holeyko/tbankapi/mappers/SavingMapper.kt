@@ -1,0 +1,42 @@
+package ru.holeyko.tbankapi.mappers
+
+import org.openqa.selenium.By
+import org.openqa.selenium.WebElement
+import ru.holeyko.tbankapi.exceptions.TBankClientException
+import ru.holeyko.tbankapi.extentions.parseNumber
+import ru.holeyko.tbankapi.model.Saving
+
+object SavingMapper {
+    private val SAVING_LINK_PATTERN = """mybank/accounts/saving/(\d+)/?.*"""
+
+    fun mapFromDivOnPKUrl(savingDiv: WebElement): Saving {
+        val savingLink = (savingDiv.findElement(By.xpath(".//a[contains(@data-qa-type, 'link')]"))
+            ?: throw TBankClientException("Can't find link on saving in saving widget"))
+        val savingId = parseSavingIdFromLink(savingLink.getAttribute("href") ?: "")
+
+        val subtitleDiv = savingDiv.findElement(By.xpath(".//div[@data-qa-type='subtitle']"))
+            ?: throw TBankClientException("Can't find subtitle in saving widget")
+        val name = subtitleDiv.text
+
+        val titleDiv = savingDiv.findElement(By.xpath(".//span[@data-qa-type='title']"))
+            ?: throw TBankClientException("Can't find title in saving widget")
+        val titleElements = titleDiv.findElements(By.xpath(".//span"))
+        if (titleElements.size != 3) {
+            throw TBankClientException("Illegal format title in saving widget")
+        }
+
+        val balance = titleElements[0].text.parseNumber()
+        val limitSpan = titleElements[2].text.parseNumber()
+
+        return Saving(savingId, name, balance, limitSpan)
+    }
+
+    private fun parseSavingIdFromLink(link: String): Long {
+        return SAVING_LINK_PATTERN.toRegex()
+            .find(link)
+            ?.groupValues
+            ?.getOrNull(1)
+            ?.toLong()
+            ?: throw TBankClientException("Can't parse saving id from link")
+    }
+}
