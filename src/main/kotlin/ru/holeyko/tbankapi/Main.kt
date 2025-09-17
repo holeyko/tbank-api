@@ -1,25 +1,23 @@
 package ru.holeyko.tbankapi
 
-import org.openqa.selenium.chrome.ChromeOptions
 import ru.holeyko.tbankapi.clients.TBankClient
-import ru.holeyko.tbankapi.clients.TbankClientFactory
+import ru.holeyko.tbankapi.clients.TBankClientFactory
+import java.io.File
 import kotlin.system.exitProcess
 
 private var tbankClient: TBankClient? = null
 
 fun main() {
     while (true) {
-        println("Pass commands:")
-        println(
-            Command.entries
-                .map { "- " + it.cmd }
-                .joinToString("\n")
-        )
+        println("Pass commands by number:")
+        Command.entries.forEachIndexed { i, cmd ->
+            println("${i + 1}) ${cmd.name}")
+        }
 
-        val input = readLine() ?: ""
-        val command = Command.findByCmd(input)
+        val command = readLine()?.trim()?.toIntOrNull()
+            ?.let { Command.byId(it - 1) }
         if (command == null) {
-            println("unknown command: $input")
+            println("unknown command index")
             println()
             continue
         }
@@ -33,15 +31,13 @@ private fun handleCommand(command: Command) {
         when (command) {
             Command.OPEN_CONNECT -> {
                 tbankClient?.close()
-                tbankClient = TbankClientFactory.openConnect(
-                    ChromeOptions(),
-                    // .addArguments("--headless=new"),
-                    { "Your Phone" },
+                tbankClient = TBankClientFactory.openConnect(
+                    { File("phone.txt").bufferedReader().readLine() }, // Own phone
                     {
                         println("Enter code:")
                         readLine() ?: ""
                     },
-                    { "Your password" }
+                    { File("password.txt").bufferedReader().readLine() }, // Own password
                 )
             }
 
@@ -65,35 +61,32 @@ private fun handleCommand(command: Command) {
             }
 
             Command.INTERNAL_TRANSFER -> {
-                println("From:")
-                val from = readLine()!!
-                println("To:")
-                val to = readLine()!!
-                println("Money:")
-                val money = readLine()?.toBigDecimal()!!
+                println("FromId ToId Amount")
+                val input = readLine()?.split(" ")!!
+                if (input.size != 3) {
+                    println("Should 3 arguments")
+                    return
+                }
+                val from = input[0].toLong()
+                val to = input[1].toLong()
+                val money = input[2].toBigDecimal()
 
                 tbankClient?.transferMoney(from, to, money)
             }
-
-            else -> return@runCatching
         }
     }.onFailure {
         println("Exception: $it")
     }
 }
 
-enum class Command(
-    val cmd: String
-) {
-    OPEN_CONNECT("open_cnt"),
-    SAVING_LIST("savings"),
-    DEBITS("debits"),
-    INTERNAL_TRANSFER("transfer"),
-    EXIT("exit");
+enum class Command {
+    OPEN_CONNECT,
+    SAVING_LIST,
+    DEBITS,
+    INTERNAL_TRANSFER,
+    EXIT;
 
     companion object {
-        fun findByCmd(cmd: String) = Command
-            .entries
-            .find { it.cmd == cmd }
+        fun byId(index: Int) = Command.entries.getOrNull(index)
     }
 }

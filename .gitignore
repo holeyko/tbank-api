@@ -14,5 +14,5 @@ gradle-app.setting
 out/
 
 # Creds
-password.txt
-phone.txt
+src/main/resources/password.txt
+src/main/resources/phone.txt

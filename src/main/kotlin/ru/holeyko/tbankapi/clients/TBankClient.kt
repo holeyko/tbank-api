@@ -10,11 +10,12 @@ interface TBankClient : AutoCloseable {
 
     fun getDebitCards(): List<DebitCard>
 
-    fun transferMoney(from: String, to: String, amount: BigDecimal)
+    fun transferMoney(fromId: Long, toId: Long, amount: BigDecimal)
 
     companion object {
         const val PK_URL = "https://www.tbank.ru/mybank"
-        const val INTERNAL_TRANSFER_URL = "https://www.tbank.ru/mybank/payments/transfer-between-accounts/?" +
-            "internal_source=homePayments_transferList_category"
+        const val INTERNAL_TRANSFER_TEMPLATE = "https://www.tbank.ru/mybank/payments/transfer-between-accounts/" +
+            "?predefined={\"account\":\"{fromId}\", \"accountTo\": \"{toId}\", \"moneyAmount\":\"{amount}\"}" +
+            "&requiredParams=[\"accountId\"]&internal_source=quick_transfers"
     }
 }

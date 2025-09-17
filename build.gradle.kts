@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.0.21"
+    kotlin("jvm") version "2.2.20"
     application
 }
 
@@ -9,7 +9,10 @@ group = "ru.holeyko"
 version = "1.0.0"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 repositories {
@@ -19,25 +22,17 @@ repositories {
 dependencies {
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
-    
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.2.20")
+
     // Selenium WebDriver
-    implementation("org.seleniumhq.selenium:selenium-java:4.25.0")
-    implementation("org.seleniumhq.selenium:selenium-support:4.25.0")
-    implementation("io.github.bonigarcia:webdrivermanager:5.9.2")
-    
-    // JSON processing (optional, for configuration)
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.17.2")
+    implementation("org.seleniumhq.selenium:selenium-java:4.35.0")
+    implementation("org.seleniumhq.selenium:selenium-support:4.35.0")
+    implementation("org.seleniumhq.selenium:selenium-chrome-driver:4.35.0")
+    implementation("io.github.bonigarcia:webdrivermanager:6.3.2")
     
     // Logging
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     implementation("ch.qos.logback:logback-classic:1.5.6")
-    
-    // Testing
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.11.2")
 }
 
 application {
@@ -46,8 +41,7 @@ application {
 
 tasks.withType<KotlinCompile> {
     compilerOptions {
-        freeCompilerArgs.add("-Xjsr305=strict")
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
     }
 }
 
@@ -55,6 +49,7 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+// Need for gradle readLine
 tasks.named<JavaExec>("run") {
     standardInput = System.`in`
 }

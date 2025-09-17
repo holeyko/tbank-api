@@ -7,7 +7,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import java.time.Duration
 
-fun ChromeDriver.findBy(by: By, timeout: Duration = Duration.ofSeconds(5)): WebElement? {
+val DEFAULT_TIMEOUT = Duration.ofSeconds(3)
+val DEFAULT_CHECK_TIMEOUT = Duration.ofSeconds(1)
+
+fun ChromeDriver.findBy(by: By, timeout: Duration = DEFAULT_TIMEOUT): WebElement? {
     return runCatching {
         WebDriverWait(this, timeout).until(
             ExpectedConditions.presenceOfElementLocated(by)
@@ -15,7 +18,7 @@ fun ChromeDriver.findBy(by: By, timeout: Duration = Duration.ofSeconds(5)): WebE
     }.getOrNull()
 }
 
-fun ChromeDriver.findAllBy(by: By, timeout: Duration = Duration.ofSeconds(5)): List<WebElement> {
+fun ChromeDriver.findAllBy(by: By, timeout: Duration = DEFAULT_TIMEOUT): List<WebElement> {
     return runCatching {
         WebDriverWait(this, timeout).until(
             ExpectedConditions.presenceOfAllElementsLocatedBy(by)
