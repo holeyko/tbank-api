@@ -31,7 +31,7 @@ private fun handleCommand(command: Command) {
         when (command) {
             Command.OPEN_CONNECT -> {
                 tbankClient?.close()
-                tbankClient = TBankClientFactory.openConnect(
+                tbankClient = TBankClientFactory.openConnection(
                     { File("phone.txt").bufferedReader().readLine() }, // Own phone
                     {
                         println("Enter code:")
