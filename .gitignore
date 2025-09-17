@@ -13,41 +13,6 @@ gradle-app.setting
 *.iws
 out/
 
-# Eclipse
-.classpath
-.project
-.settings/
-bin/
-
-# VS Code
-.vscode/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-logs/
-
-# Runtime
-*.pid
-*.swp
-*.swo
-
-# Environment
-.env
-.env.local
-.env.*.local
-
-# Screenshots and videos (if any)
-screenshots/
-videos/
-
-# WebDriver logs
-chromedriver.log
-geckodriver.log
-
-# Test results
-test-results/
-reports/
+# Creds
+password.txt
+phone.txt
