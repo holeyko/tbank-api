@@ -51,6 +51,8 @@ class TBankSeleniumClient(
 
         driver.findBy(By.xpath("//div[contains(@data-qa-type, 'notification-pay-popup']"), DEFAULT_CHECK_TIMEOUT)
             ?.let { throw TBankClientIIllegalArgumentException("Insufficient funds for the transfer") }
+
+        LOG.debug("Money has been transferred")
     }
 
     override fun close() {
