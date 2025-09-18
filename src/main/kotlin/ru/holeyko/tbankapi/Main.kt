@@ -1,5 +1,6 @@
 package ru.holeyko.tbankapi
 
+import org.openqa.selenium.chrome.ChromeOptions
 import ru.holeyko.tbankapi.clients.TBankClient
 import ru.holeyko.tbankapi.clients.TBankClientFactory
 import java.io.File
@@ -32,12 +33,14 @@ private fun handleCommand(command: Command) {
             Command.OPEN_CONNECT -> {
                 tbankClient?.close()
                 tbankClient = TBankClientFactory.openConnection(
-                    { File("phone.txt").bufferedReader().readLine() }, // Own phone
+                    File("creds/phone.txt").bufferedReader().readLine().trim(), // Own phone
                     {
                         println("Enter code:")
                         readLine() ?: ""
                     },
-                    { File("password.txt").bufferedReader().readLine() }, // Own password
+                    File("creds/password.txt").bufferedReader().readLine().trim(), // Own password
+                    File("creds/fastcode.txt").bufferedReader().readLine().trim(),
+                    ChromeOptions(),
                 )
             }
 

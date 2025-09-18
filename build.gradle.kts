@@ -28,8 +28,9 @@ dependencies {
     implementation("org.seleniumhq.selenium:selenium-java:4.35.0")
     implementation("org.seleniumhq.selenium:selenium-support:4.35.0")
     implementation("org.seleniumhq.selenium:selenium-chrome-driver:4.35.0")
-    implementation("io.github.bonigarcia:webdrivermanager:6.3.2")
-    
+    // implementation("io.github.bonigarcia:webdrivermanager:6.3.2")
+    implementation("io.github.bonigarcia:webdrivermanager:5.8.0")
+
     // Logging
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     implementation("ch.qos.logback:logback-classic:1.5.6")

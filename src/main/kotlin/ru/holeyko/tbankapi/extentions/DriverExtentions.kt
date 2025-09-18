@@ -8,7 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait
 import java.time.Duration
 
 val DEFAULT_TIMEOUT = Duration.ofSeconds(3)
-val DEFAULT_CHECK_TIMEOUT = Duration.ofSeconds(1)
+val DEFAULT_CHECK_TIMEOUT = Duration.ofMillis(500)
 
 fun ChromeDriver.findBy(by: By, timeout: Duration = DEFAULT_TIMEOUT): WebElement? {
     return runCatching {
@@ -24,12 +24,4 @@ fun ChromeDriver.findAllBy(by: By, timeout: Duration = DEFAULT_TIMEOUT): List<We
             ExpectedConditions.presenceOfAllElementsLocatedBy(by)
         )
     }.getOrDefault(listOf())
-}
-
-fun ChromeDriver.goToIfNeed(url: String) {
-    if (currentUrl?.endsWith(url) == true || currentUrl?.endsWith("$url/") == true) {
-        return
-    }
-
-    get(url)
 }

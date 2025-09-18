@@ -26,36 +26,38 @@ object TBankClientFactory {
         )
 
     fun openConnection(
-        phoneRetriever: () -> String,
+        phone: String,
         codeRetriever: () -> String,
-        passwordRetriever: () -> String,
+        password: String,
+        fastCode: String,
         options: ChromeOptions = defaultOptions()
     ): TBankClient {
         val driver = ChromeDriver(options)
 
         try {
-            driver.setup(phoneRetriever, codeRetriever, passwordRetriever)
+            driver.setup(phone, codeRetriever, password, fastCode)
         } catch (e: Exception) {
             LOG.debug("Failed open connection due exception.", e)
             driver.close()
             throw e
         }
 
-        return TBankSeleniumClient(driver)
+        return TBankSeleniumClient(driver, fastCode)
     }
 
     private fun ChromeDriver.setup(
-        phoneRetriever: () -> String,
+        phone: String,
         codeRetriever: () -> String,
-        passwordRetriever: () -> String,
+        password: String,
+        fastCode: String,
     ) {
         LOG.debug("Go to auth url: $AUTH_URL")
         get(AUTH_URL)
 
-        passPhone(phoneRetriever)
+        passPhone(phone)
         passSecretCode(codeRetriever)
-        passPassword(passwordRetriever)
-        skipFastCode()
+        passPassword(password)
+        passFastCode(fastCode)
 
         // if (checkLoginSuccess()) {
         // TODO: fix it
@@ -66,18 +68,16 @@ object TBankClientFactory {
         }
     }
 
-    private fun ChromeDriver.passPhone(phoneRetriever: () -> String) {
+    private fun ChromeDriver.passPhone(phone: String) {
         LOG.debug("Try to submit phone")
 
-        val phone = phoneRetriever()
-        val phoneInput = findBy(By.xpath("//input[@automation-id='phone-input']"))
+        findBy(By.xpath("//input[@automation-id='phone-input']"))
+            ?.sendKeys(phone)
             ?: throw TBankClientIllegalStateException("This is not phone page [url=$currentUrl]")
-        phoneInput.clear()
-        phoneInput.sendKeys(phone)
 
-        val submitButton = findBy(By.xpath("//button[@automation-id='button-submit']"))
+        findBy(By.xpath("//button[@automation-id='button-submit']"))
+            ?.click()
             ?: throw TBankClientElementNotFoundException("Can't find password submit button")
-        submitButton.click()
 
         findBy(By.xpath("//p[@automation-id='server-error']"), DEFAULT_CHECK_TIMEOUT)?.let {
             throw TBankClientIIllegalArgumentException("Incorrect phone number")
@@ -93,16 +93,15 @@ object TBankClientFactory {
     private fun ChromeDriver.passSecretCode(codeRetriever: () -> String) {
         LOG.debug("Try to submit secret code")
 
-        val codeInput = findBy(By.xpath("//input[@name='otp']"))
-            ?: throw TBankClientIllegalStateException("This is not secret code page [url=$currentUrl]")
-
         val secretCode = codeRetriever()
         LOG.debug("Passed code: $secretCode")
         if (secretCode.isBlank()) {
             throw TBankClientIIllegalArgumentException("Secret code must contains only 4 numbers")
         }
-        codeInput.clear()
-        codeInput.sendKeys(secretCode)
+
+        findBy(By.xpath("//input[@name='otp']"))
+            ?.sendKeys(secretCode)
+            ?: throw TBankClientIllegalStateException("This is not secret code page [url=$currentUrl]")
 
         findBy(By.xpath("//p[@automation-id='server-error']"), DEFAULT_CHECK_TIMEOUT)?.let {
             throw TBankClientIIllegalArgumentException("Secret code is incorrect")
@@ -111,25 +110,23 @@ object TBankClientFactory {
         LOG.debug("Secret code has been submitted successfully")
     }
 
-    private fun ChromeDriver.passPassword(passwordRetriever: () -> String) {
+    private fun ChromeDriver.passPassword(password: String) {
         LOG.debug("Try to pass password")
 
-        val passwordForm = findBy(By.xpath("//input[@name='password']")) ?: run {
-            LOG.debug("Skip password form")
-            return
-        }
-
-        val password = passwordRetriever()
         if (password.isBlank()) {
             throw TBankClientIIllegalArgumentException("Incorrect password")
         }
 
-        passwordForm.clear()
-        passwordForm.sendKeys(password)
+        findBy(By.xpath("//input[@name='password']"))
+            ?.sendKeys(password)
+            ?: run {
+                LOG.debug("Skip password form")
+                return
+            }
 
-        val submitButton = findBy(By.xpath("//button[@automation-id='button-submit']"))
+        findBy(By.xpath("//button[@automation-id='button-submit']"))
+            ?.click()
             ?: throw TBankClientIllegalStateException("Can't find password submit button")
-        submitButton.click()
 
         findBy(By.xpath("//p[@automation-id='server-error']"), DEFAULT_CHECK_TIMEOUT)?.let {
             throw TBankClientIIllegalArgumentException("Password is incorrect")
@@ -138,19 +135,31 @@ object TBankClientFactory {
         LOG.debug("Password has been passed successfully")
     }
 
-    private fun ChromeDriver.skipFastCode() {
-        LOG.debug("Try to skip fast code")
+    private fun ChromeDriver.passFastCode(fastCode: String) {
+        LOG.debug("Try to pass fast code")
 
-        findBy(By.xpath("//h1[@id='form-title']"))?.text ?: run {
-            LOG.debug("Current url isn't fast code page [url=$currentUrl]")
-            return
+        if (fastCode.length != 4) {
+            throw TBankClientIIllegalArgumentException("Fast code must has 4 symbols")
         }
 
-        val skipButton = findBy(By.xpath("//button[@automation-id='cancel-button']"))
-            ?: throw TBankClientIllegalStateException("Can't find skip button in fast code page")
-        skipButton.click()
+        findBy(By.xpath("//h1[@id='form-title']"))?.text
+            ?.takeIf { it == "Придумайте код" }
+            ?: run {
+                LOG.debug("Current url isn't fast code page [url=$currentUrl]")
+                return
+            }
 
-        LOG.debug("Fast code has been skipped successfully")
+        fastCode.forEachIndexed { i, sym ->
+            findBy(By.xpath("//input[@id='pinCode$i']"))
+                ?.sendKeys(sym.toString())
+                ?: throw TBankClientIllegalStateException("Can't find ${i + 1} field for fast code")
+        }
+
+        findBy(By.xpath("//button[@automation-id='button-submit']"))
+            ?.click()
+            ?: throw TBankClientIllegalStateException("Can't find submit button in fast code page")
+
+        LOG.debug("Fast code has been passed successfully")
     }
 
     private fun ChromeDriver.checkLoginSuccess(): Boolean {
