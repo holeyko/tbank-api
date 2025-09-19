@@ -34,10 +34,6 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.5.6")
 }
 
-application {
-    mainClass.set("ru.holeyko.tbankapi.MainKt")
-}
-
 tasks.withType<KotlinCompile> {
     compilerOptions {
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
