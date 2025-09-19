@@ -1,4 +1,4 @@
-package ru.holeyko.tbankapi.extentions
+package com.holeyko.tbankapi.extentions
 
 import java.math.BigDecimal
 

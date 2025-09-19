@@ -1,10 +1,10 @@
-package ru.holeyko.tbankapi.mappers
+package com.holeyko.tbankapi.mappers
 
+import com.holeyko.tbankapi.exceptions.TBankClientIllegalStateException
+import com.holeyko.tbankapi.extentions.parseNumber
+import com.holeyko.tbankapi.model.DebitCard
 import org.openqa.selenium.By
 import org.openqa.selenium.WebElement
-import ru.holeyko.tbankapi.exceptions.TBankClientIllegalStateException
-import ru.holeyko.tbankapi.extentions.parseNumber
-import ru.holeyko.tbankapi.model.DebitCard
 
 object DebitCardMapper {
     private val DEBIT_CARD_LINK_PATTERN = """mybank/accounts/debit/(\d+)/?.*"""

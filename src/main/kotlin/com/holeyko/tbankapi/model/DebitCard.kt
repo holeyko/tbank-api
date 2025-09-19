@@ -1,4 +1,4 @@
-package ru.holeyko.tbankapi.model
+package com.holeyko.tbankapi.model
 
 import java.math.BigDecimal
 

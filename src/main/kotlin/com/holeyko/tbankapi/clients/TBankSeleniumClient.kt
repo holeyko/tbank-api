@@ -1,19 +1,19 @@
-package ru.holeyko.tbankapi.clients
+package com.holeyko.tbankapi.clients
 
+import com.holeyko.tbankapi.clients.TBankClient.Companion.INTERNAL_TRANSFER_TEMPLATE
+import com.holeyko.tbankapi.clients.TBankClient.Companion.PK_URL
+import com.holeyko.tbankapi.exceptions.TBankClientIIllegalArgumentException
+import com.holeyko.tbankapi.exceptions.TBankClientIllegalStateException
+import com.holeyko.tbankapi.extentions.DEFAULT_CHECK_TIMEOUT
+import com.holeyko.tbankapi.extentions.findBy
+import com.holeyko.tbankapi.mappers.DebitCardMapper
+import com.holeyko.tbankapi.mappers.SavingMapper
+import com.holeyko.tbankapi.model.DebitCard
+import com.holeyko.tbankapi.model.Saving
 import org.openqa.selenium.By
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.chrome.ChromeDriver
 import org.slf4j.LoggerFactory
-import ru.holeyko.tbankapi.clients.TBankClient.Companion.INTERNAL_TRANSFER_TEMPLATE
-import ru.holeyko.tbankapi.clients.TBankClient.Companion.PK_URL
-import ru.holeyko.tbankapi.exceptions.TBankClientIIllegalArgumentException
-import ru.holeyko.tbankapi.exceptions.TBankClientIllegalStateException
-import ru.holeyko.tbankapi.extentions.DEFAULT_CHECK_TIMEOUT
-import ru.holeyko.tbankapi.extentions.findBy
-import ru.holeyko.tbankapi.mappers.DebitCardMapper
-import ru.holeyko.tbankapi.mappers.SavingMapper
-import ru.holeyko.tbankapi.model.DebitCard
-import ru.holeyko.tbankapi.model.Saving
 import java.math.BigDecimal
 
 class TBankSeleniumClient(

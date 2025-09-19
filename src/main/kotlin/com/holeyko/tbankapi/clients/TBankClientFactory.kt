@@ -1,14 +1,14 @@
-package ru.holeyko.tbankapi.clients
+package com.holeyko.tbankapi.clients
 
+import com.holeyko.tbankapi.exceptions.TBankClientElementNotFoundException
+import com.holeyko.tbankapi.exceptions.TBankClientIIllegalArgumentException
+import com.holeyko.tbankapi.exceptions.TBankClientIllegalStateException
+import com.holeyko.tbankapi.extentions.DEFAULT_CHECK_TIMEOUT
+import com.holeyko.tbankapi.extentions.findBy
 import org.openqa.selenium.By
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.slf4j.LoggerFactory
-import ru.holeyko.tbankapi.exceptions.TBankClientElementNotFoundException
-import ru.holeyko.tbankapi.exceptions.TBankClientIIllegalArgumentException
-import ru.holeyko.tbankapi.exceptions.TBankClientIllegalStateException
-import ru.holeyko.tbankapi.extentions.DEFAULT_CHECK_TIMEOUT
-import ru.holeyko.tbankapi.extentions.findBy
 
 object TBankClientFactory {
     const val AUTH_URL = "https://www.tbank.ru/login"

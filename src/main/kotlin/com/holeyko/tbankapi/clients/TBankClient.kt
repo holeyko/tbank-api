@@ -1,7 +1,7 @@
-package ru.holeyko.tbankapi.clients
+package com.holeyko.tbankapi.clients
 
-import ru.holeyko.tbankapi.model.DebitCard
-import ru.holeyko.tbankapi.model.Saving
+import com.holeyko.tbankapi.model.DebitCard
+import com.holeyko.tbankapi.model.Saving
 import java.math.BigDecimal
 
 interface TBankClient : AutoCloseable {

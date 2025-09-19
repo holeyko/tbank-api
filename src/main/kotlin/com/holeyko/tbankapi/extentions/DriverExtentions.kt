@@ -1,4 +1,4 @@
-package ru.holeyko.tbankapi.extentions
+package com.holeyko.tbankapi.extentions
 
 import org.openqa.selenium.By
 import org.openqa.selenium.WebElement

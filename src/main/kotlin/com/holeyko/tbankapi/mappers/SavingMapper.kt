@@ -1,11 +1,11 @@
-package ru.holeyko.tbankapi.mappers
+package com.holeyko.tbankapi.mappers
 
+import com.holeyko.tbankapi.exceptions.TBankClientException
+import com.holeyko.tbankapi.exceptions.TBankClientIllegalStateException
+import com.holeyko.tbankapi.extentions.parseNumber
+import com.holeyko.tbankapi.model.Saving
 import org.openqa.selenium.By
 import org.openqa.selenium.WebElement
-import ru.holeyko.tbankapi.exceptions.TBankClientException
-import ru.holeyko.tbankapi.exceptions.TBankClientIllegalStateException
-import ru.holeyko.tbankapi.extentions.parseNumber
-import ru.holeyko.tbankapi.model.Saving
 
 object SavingMapper {
     private val SAVING_LINK_PATTERN = """mybank/accounts/saving/(\d+)/?.*"""

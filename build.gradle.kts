@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm") version "2.2.20"
 }
 
-group = "ru.holeyko"
+group = "com.holeyko"
 version = "1.0.0"
 
 java {
