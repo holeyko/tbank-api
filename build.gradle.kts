@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "2.2.20"
-    application
 }
 
 group = "ru.holeyko"
@@ -28,8 +27,7 @@ dependencies {
     implementation("org.seleniumhq.selenium:selenium-java:4.35.0")
     implementation("org.seleniumhq.selenium:selenium-support:4.35.0")
     implementation("org.seleniumhq.selenium:selenium-chrome-driver:4.35.0")
-    // implementation("io.github.bonigarcia:webdrivermanager:6.3.2")
-    implementation("io.github.bonigarcia:webdrivermanager:5.8.0")
+    implementation("io.github.bonigarcia:webdrivermanager:6.3.2")
 
     // Logging
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
@@ -44,13 +42,4 @@ tasks.withType<KotlinCompile> {
     compilerOptions {
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
     }
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
-
-// Need for gradle readLine
-tasks.named<JavaExec>("run") {
-    standardInput = System.`in`
 }
