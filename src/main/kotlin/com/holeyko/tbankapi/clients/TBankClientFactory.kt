@@ -15,15 +15,19 @@ object TBankClientFactory {
 
     private val LOG = LoggerFactory.getLogger(TBankClientFactory::class.java)
 
-    fun defaultOptions(): ChromeOptions = ChromeOptions()
-        .addArguments(
-            "--headless=new",
+    fun defaultOptions(withGui: Boolean = false): ChromeOptions {
+        val options = ChromeOptions().addArguments(
             "--window-size=1280,720",
-            "--enable-webgl"
-        )
-        .addArguments(
+            "--enable-webgl",
             "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
         )
+
+        if (!withGui) {
+            options.addArguments("--headless=new")
+        }
+
+        return options
+    }
 
     fun openConnection(
         phone: String,
